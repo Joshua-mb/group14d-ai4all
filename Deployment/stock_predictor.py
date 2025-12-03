@@ -4,6 +4,10 @@ import yfinance as yf
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPClassifier
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+
+# Initialize VADER
+vader_analyzer = SentimentIntensityAnalyzer()
 
 # Helper Functions
 def drop_na(merged_df):
@@ -117,8 +121,9 @@ def prediction_model(stock, sentiment_value):
 
 
 # Streamlit UI
+st.title("Next Day Stock Price Prediction")
+
 with st.form("Direction_Predictor"):
-    st.title("Next Day Stock Price Prediction")
     selected_stock = st.selectbox("Select a stock", stocks)
 
     ticker_data = yf.Ticker(selected_stock)
@@ -130,8 +135,33 @@ with st.form("Direction_Predictor"):
     except:
         st.subheader("Current Stock Price: Data not available")
 
-    st.subheader("Based on what you've seen on social media, how positive or negative is the sentiment for this stock for the past week?")
-    sentiment_value = st.select_slider("Select on a scale from -5 to 5", [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5])
+    st.subheader("Choose your input method:")
+    input_method = st.radio("", ["Manual Sentiment Slider", "Analyze a Comment/Tweet"])
+
+    sentiment_value = 0.0
+
+    if input_method == "Manual Sentiment Slider":
+        st.write("Based on what you've seen on social media, how positive or negative is the sentiment?")
+        sentiment_value = st.select_slider("Select on a scale from -1 to 1", 
+                                           options=[-1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+    else:
+        user_comment = st.text_area("Paste a tweet or comment about the stock:", 
+                                    height=100,
+                                    placeholder="Example: Apple's new product launch was amazing! Sales are through the roof!")
+        
+        if user_comment:
+            # Analyze with VADER
+            vader_scores = vader_analyzer.polarity_scores(user_comment)
+            sentiment_value = vader_scores['compound']
+            
+            # Show the sentiment analysis
+            st.write(f"**Detected Sentiment Score:** {sentiment_value:.3f}")
+            if sentiment_value > 0.05:
+                st.success("😊 Positive Sentiment")
+            elif sentiment_value < -0.05:
+                st.error("😞 Negative Sentiment")
+            else:
+                st.info("😐 Neutral Sentiment")
 
     clicked = st.form_submit_button(label="Submit")
     if clicked:
