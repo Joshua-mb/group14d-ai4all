@@ -16,26 +16,14 @@ def drop_na(merged_df):
     return merged_df
 
 def apply_lag_features(merged_df):
-    # add previous one-day values
     merged_df["prev1_open"] = merged_df["Open"].shift(1)
     merged_df["prev1_close"] = merged_df["Close"].shift(1)
-
-    # add previous two-day values
     merged_df["prev2_open"] = merged_df["Open"].shift(2)
     merged_df["prev2_close"] = merged_df["Close"].shift(2)
-
-    # previous 1 day sentiment
     merged_df["prev1_sentiment_compound"] = merged_df["sentiment_compound"].shift(1)
-
-    # previous 2 day sentiment
     merged_df["prev2_sentiment_compound"] = merged_df["sentiment_compound"].shift(2)
-
-    # previous 1 day volume
     merged_df["prev1_volume"] = merged_df["Volume"].shift(1)
-
-    # previous 2 day volume
     merged_df["prev2_volume"] = merged_df["Volume"].shift(2)
-
     return merged_df
 
 
@@ -72,7 +60,6 @@ for stock in stocks:
         X_scaled, y, test_size=0.2, random_state=42, stratify=y
     )
 
-    # Neural Network Model (same as your notebook)
     model = MLPClassifier(
         hidden_layer_sizes=(64, 32, 16),
         activation='relu',
@@ -85,7 +72,6 @@ for stock in stocks:
     models[stock] = model
 
 
-# Prediction function
 def prediction_model(stock, sentiment_value):
     model = models[stock]
     scaler = scalers[stock]
@@ -123,20 +109,23 @@ def prediction_model(stock, sentiment_value):
 # Streamlit UI
 st.title("Next Day Stock Price Prediction")
 
+# Stock selection and price display OUTSIDE the form
+selected_stock = st.selectbox("Select a stock", stocks)
+
+ticker_data = yf.Ticker(selected_stock)
+try:
+    current_price = ticker_data.info.get('currentPrice', None)
+    if current_price is None:
+        current_price = ticker_data.history(period="1d")['Close'].iloc[-1]
+    st.subheader(f"Current Stock Price: ${current_price:.2f}")
+except:
+    st.subheader("Current Stock Price: Data not available")
+
+# Form for sentiment input
 with st.form("Direction_Predictor"):
-    selected_stock = st.selectbox("Select a stock", stocks)
-
-    ticker_data = yf.Ticker(selected_stock)
-    try:
-        current_price = ticker_data.info.get('currentPrice', None)
-        if current_price is None:
-            current_price = ticker_data.history(period="1d")['Close'].iloc[-1]
-        st.subheader(f"Current Stock Price: ${current_price:.2f}")
-    except:
-        st.subheader("Current Stock Price: Data not available")
-
-    st.subheader("Choose your input method:")
-    input_method = st.radio("", ["Manual Sentiment Slider", "Analyze a Comment/Tweet"])
+    st.subheader("Choose your input method")
+    input_method = st.radio("Select how you want to provide sentiment:", 
+                            ["Manual Sentiment Slider", "Analyze a Comment/Tweet"])
 
     sentiment_value = 0.0
 
@@ -150,11 +139,9 @@ with st.form("Direction_Predictor"):
                                     placeholder="Example: Apple's new product launch was amazing! Sales are through the roof!")
         
         if user_comment:
-            # Analyze with VADER
             vader_scores = vader_analyzer.polarity_scores(user_comment)
             sentiment_value = vader_scores['compound']
             
-            # Show the sentiment analysis
             st.write(f"**Detected Sentiment Score:** {sentiment_value:.3f}")
             if sentiment_value > 0.05:
                 st.success("😊 Positive Sentiment")
@@ -163,7 +150,7 @@ with st.form("Direction_Predictor"):
             else:
                 st.info("😐 Neutral Sentiment")
 
-    clicked = st.form_submit_button(label="Submit")
+    clicked = st.form_submit_button(label="Predict")
     if clicked:
         prediction = prediction_model(selected_stock, sentiment_value)
         if prediction == 1:
