@@ -27,22 +27,22 @@
 ## Model Selection
 - We thought it would be best to use various algorithms to create different models for our data, and then ultimately decide on which one to select based on its accuracy.
 - We looked for different algorithms we could use to build a supervised classification model. We wanted to look for algorithms that could perform well with non-linear data since there were not any linear relationships with the features we were looking at. We eventually narrowed down the algorithms to k-nearest neighbors, neural networks, and support vector machine.
-  **- Support Vector Machine (RBF Kernel):** an ML algorithm that maps input data into a high-dimensional feature space and measures the similarity between pairs of data points within the space. The AAPL stock had a test accuracy of 82%, Google had 75%, INTC had 65%, META had 65%, and MSFT had 72%.
-  **- K-Nearest Neighbors Model:** an ML algorithm that works by finding the k closest data points or neighbors to a given input and then makes a prediction based on the majority class. The AAPL stock had 52%, GOOG had 56%, INTC had 46%, META had 50%, and MSFT had 54%.
-  **- Neural Networks Model:** a machine learning algorithm inspired by the human brain that learns patterns through layers of artificial "neurons." The AAPL stock had 84%, GOOG had 81%, INTC had 65%, META had 66%, and MSFT had 86%.
+  - **Support Vector Machine (RBF Kernel):** an ML algorithm that maps input data into a high-dimensional feature space and measures the similarity between pairs of data points within the space. The AAPL stock had a test accuracy of 82%, Google had 75%, INTC had 65%, META had 65%, and MSFT had 72%.
+  - **K-Nearest Neighbors Model:** an ML algorithm that works by finding the k closest data points or neighbors to a given input and then makes a prediction based on the majority class. The AAPL stock had 52%, GOOG had 56%, INTC had 46%, META had 50%, and MSFT had 54%.
+  - **Neural Networks Model:** a machine learning algorithm inspired by the human brain that learns patterns through layers of artificial "neurons." The AAPL stock had 84%, GOOG had 81%, INTC had 65%, META had 66%, and MSFT had 86%.
 - **We ultimately decided on the Neural Networks Model** due to the promising accuracies it provided. Neural network models excel at finding subtle patterns in complex data, which is essential when trying to predict stock movements based on multiple factors, including sentiment.
 
 ## Sources of Bias in Our Model
-**- VADER Sentiment Analysis Limitations:** VADER was trained on general social media text, not financial language. This means it struggles with finance-specific terminology and context. For example, when someone tweets "this stock is brutally undervalued," VADER might interpret "brutally" as negative, when in a financial context it's actually expressing a positive opportunity. Additionally, VADER cannot reliably detect sarcasm or irony, which is extremely common in financial Twitter. A tweet saying "Great, another brilliant decision by management" might be pure sarcasm, but VADER would read it as positive.
-**- Twitter Data Collection:** Our data source itself is biased. Twitter users skew younger and more tech-savvy than the general investing population. More importantly, we're missing institutional investor sentiment—the hedge funds, mutual funds, and major players who drive most of the actual trading volume in the market.
-**- Feature Selection Bias:** Our model focuses primarily on sentiment and basic stock features like price and volume, but it ignores fundamental factors that professional investors rely on—things like earnings reports, P/E ratios, revenue growth, and interest rate changes.
+  - **VADER Sentiment Analysis Limitations:** VADER was trained on general social media text, not financial language. This means it struggles with finance-specific terminology and context. For example, when someone tweets "this stock is brutally undervalued," VADER might interpret "brutally" as negative, when in a financial context it's actually expressing a positive opportunity. Additionally, VADER cannot reliably detect sarcasm or irony, which is extremely common in financial Twitter. A tweet saying "Great, another brilliant decision by management" might be pure sarcasm, but VADER would read it as positive.
+  - **Twitter Data Collection:** Our data source itself is biased. Twitter users skew younger and more tech-savvy than the general investing population. More importantly, we're missing institutional investor sentiment—the hedge funds, mutual funds, and major players who drive most of the actual trading volume in the market.
+  - **Feature Selection Bias:** Our model focuses primarily on sentiment and basic stock features like price and volume, but it ignores fundamental factors that professional investors rely on—things like earnings reports, P/E ratios, revenue growth, and interest rate changes.
 
 ## Positive and Negative Impacts of our Model
-**- Positive:**
+  - **Positive:**
     - Social media is a valuable source on public sentiment due to its day-to-day influence.
     - Sentiment from social media can reveal the emotional state of investors leading to an impact on market momentum.
     - Sentiment data can lead to more informed decisions.
-**- Negative:**
+  - **Negative:**
     - Sentiment models may fail to learn context-dependent situations or recognize sarcasm/irony.
     - Social media can be filled with misleading or irrelevant information.
     - Noisy or inconsistent data can reduce predictive accuracy.
