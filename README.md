@@ -10,7 +10,7 @@
 - We developed machine learning models to perform binary classification (up/down) on daily stock movements for six tech stocks: Apple (AAPL), Google (GOOG), Intel (INTC), Meta (META), Microsoft (MSFT).
 
 ## Data
-- We selected **“Stock Tweets for Sentiment Analysis and Prediction”** dataset from Kaggle. The post dates range from 2021 to 2022 [!https://www.kaggle.com/datasets/equinxx/stock-tweets-for-sentiment-analysis-and-prediction]
+- We selected **“Stock Tweets for Sentiment Analysis and Prediction”** dataset from Kaggle. The post dates range from 2021 to 2022 [https://www.kaggle.com/datasets/equinxx/stock-tweets-for-sentiment-analysis-and-prediction]
 - We used a pre-trained VADER model to assign a sentiment value to each stock tweet based on negative, neutral, positive, and compound scores
 - The main features we looked into for our project:
   - Stock Price Data: Close Price, Open Price, Volume (1-2 day rolling window)
