@@ -1,4 +1,4 @@
-# Sentiment-Based Stock Direction Classifier​
+# Sentiment-Based Stock Direction Classifier 📈​
 
 ## Background 
 - Social media plays an influential role in our day to day lives whether it is in politics, pop culture, or the news. 
